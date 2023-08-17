@@ -8,8 +8,12 @@ use zkml::{
 };
 
 fn main() {
-  let config_fname = std::env::args().nth(1).expect("config file path");
-  let inp_fname = std::env::args().nth(2).expect("input file path");
+
+  let config_fname = "examples/mnist/model.msgpack";
+  let inp_fname = "examples/mnist/inp.msgpack kzg";
+
+  //let config_fname = std::env::args().nth(1).expect("config file path");
+  //let inp_fname = std::env::args().nth(2).expect("input file path");
 
   let config: ModelMsgpack = load_model_msgpack(&config_fname, &inp_fname);
 

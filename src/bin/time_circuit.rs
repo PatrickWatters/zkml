@@ -5,11 +5,20 @@ use zkml::{
 };
 
 fn main() {
+
+  let config_fname= "examples/mnist/model.msgpack";
+  let inp_fname ="examples/mnist/inp.msgpack";
+  let kzg_or_ipa = "kzg";
+
+  /* 
+
   let config_fname = std::env::args().nth(1).expect("config file path");
   let inp_fname = std::env::args().nth(2).expect("input file path");
   let kzg_or_ipa = std::env::args().nth(3).expect("kzg or ipa");
 
-  if kzg_or_ipa != "kzg" && kzg_or_ipa != "ipa" {
+*/
+
+if kzg_or_ipa != "kzg" && kzg_or_ipa != "ipa" {
     panic!("Must specify kzg or ipa");
   }
 
