@@ -3,7 +3,7 @@
 eval "$(conda shell.bash hook)"
 conda activate zkml
 
-python ../../python/converter.py --model efficientnet_lite3_fp32_2.tflite --model_output converted_model.msgpack --config_output config.msgpack --num_cols 10 --num_randoms 1024
+python ../../python/converter.py --model efficientnet_lite3_fp32_2.tflite --model_output converted_model.msgpack --config_output config.msgpack --num_cols 10 --k 25
 
 python data_to_npy.py
 
