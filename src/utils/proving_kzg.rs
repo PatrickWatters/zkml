@@ -106,7 +106,9 @@ pub fn time_circuit_kzg(circuit: ModelCircuit<Fr>, model:String) {
     verifying_time:String::from(""), 
 };
   stat_collector.model_name = model;
-  stat_collector.num_constraints = format!("{}",circuit.k as u32);
+
+
+  stat_collector.num_constraints = format!("{}",1 << circuit.k as u64); 
 
   let rng = rand::thread_rng();
   let start = Instant::now();
