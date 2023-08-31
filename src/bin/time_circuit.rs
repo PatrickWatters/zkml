@@ -6,10 +6,25 @@ use zkml::{
 
 fn main() {
 
-  let config_fname= "examples/mnist/model.msgpack";
-  let inp_fname ="examples/mnist/inp.msgpack";
-  let kzg_or_ipa = "kzg";
-  let model = String::from("mnist");
+  let model = String::from("clip");
+  let mut config_fname= "";
+  let mut inp_fname ="";
+  let mut kzg_or_ipa = "";
+
+  if model == "mnist"
+  {
+    //config_fname = "pw_examples/mnist/model.msgpack";
+    //inp_fname = "pw_examples/mnist/example_inp.msgpack"
+    config_fname= "examples/mnist/model.msgpack";
+    inp_fname ="examples/mnist/inp.msgpack";
+    kzg_or_ipa = "kzg";
+  } 
+  else if model == "clip" {
+    config_fname= "examples/nlp/clip/model.msgpack";
+    inp_fname ="examples/nlp/clip/inp.msgpack";
+    kzg_or_ipa = "kzg"; 
+  }
+
 
   /* 
 
