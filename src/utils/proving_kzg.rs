@@ -269,7 +269,7 @@ pub fn verify_circuit_kzg(
 
 fn log_stats(stat_collector:LoggingInfo)-> Result<(), Box<dyn Error>>
 { 
-    let filename = "time_breakdown.csv";
+    let filename = "/home/project2reu/patrick/gpuhalo2/halo2/stats/zkml_stats.csv";
     let already_exists= Path::new(filename).exists();
 
     let file = std::fs::OpenOptions::new()
