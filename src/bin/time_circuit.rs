@@ -6,7 +6,7 @@ use zkml::{
 
 fn main() {
 
-  let model = String::from("clip");
+  let model = String::from("resnet");
   let mut config_fname= "";
   let mut inp_fname ="";
   let mut kzg_or_ipa = "";
@@ -24,7 +24,11 @@ fn main() {
     inp_fname ="examples/nlp/clip/inp.msgpack";
     kzg_or_ipa = "kzg"; 
   }
-
+  else if model == "resnet" {
+    config_fname= "examples/resnet/converted_model.msgpack";
+    inp_fname ="examples/resnet/example_inp.msgpack";
+    kzg_or_ipa = "kzg"; 
+  }
 
   /* 
 

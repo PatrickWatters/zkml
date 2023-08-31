@@ -9,13 +9,14 @@ use zkml::{
 
 fn main() {
 
-  //let config_fname = "/Users/patrickwatters/Projects/halogpu/zkml/examples/mnist/model.msgpack";
-  //let inp_fname = "/Users/patrickwatters/Projects/halogpu/zkml/examples/mnist/inp.msgpack";
-
-  let config_fname = "pw_examples/mnist/model.msgpack";
-  let inp_fname = "pw_examples/mnist/example_inp.msgpack";
-  //let config_fname = std::env::args().nth(1).expect("config file path");
-  //let inp_fname = std::env::args().nth(2).expect("input file path");
+  //let config_fname = "pw_examples/mnist/model.msgpack";
+  //let inp_fname = "pw_examples/mnist/example_inp.msgpack";
+  
+  //let config_fname= "examples/nlp/clip/model.msgpack";
+  //let inp_fname = "examples/nlp/clip/inp.msgpack";
+  
+  let config_fname = "pw_examples/resnet/converted_model.msgpack";
+  let inp_fname = "pw_examples/resnet/example_inp.msgpack";
 
   let config: ModelMsgpack = load_model_msgpack(&config_fname, &inp_fname);
 
