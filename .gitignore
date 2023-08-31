@@ -27,5 +27,5 @@ params_ipa
 examples
 testing/data
 *.diff
-pw_examples
+pw_examples/tflite_models
 transfer.sh

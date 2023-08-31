@@ -25,8 +25,8 @@ fn main() {
     kzg_or_ipa = "kzg"; 
   }//
   else if model == "resnet" {
-    config_fname= "resnet/converted_model.msgpack";
-    inp_fname ="resnet/example_inp.msgpack";
+    config_fname= "pw_examples/squeezenet/converted_model.msgpack";
+    inp_fname ="pw_examples/squeezenet/example_inp.msgpack";
     kzg_or_ipa = "kzg"; 
   }
 
