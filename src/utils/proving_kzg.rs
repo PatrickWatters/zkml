@@ -3,7 +3,10 @@ use std::{
   io::{BufReader, Write},
   path::Path,
   time::Instant,
+  error::Error,
 };
+
+
 
 use halo2_proofs::{
   dev::MockProver,
@@ -71,7 +74,40 @@ pub fn verify_kzg(
   );
 }
 
-pub fn time_circuit_kzg(circuit: ModelCircuit<Fr>) {
+
+
+struct LoggingInfo {
+  model_name: String,
+  num_constraints: String,
+  params_construction: String,
+  generating_vkey: String,
+  vkey_size: String,
+  generating_pkey: String,
+  pkey_size: String,
+  filling_circuit: String,
+  proving_time: String,
+  proof_size: String,
+  verifying_time: String,
+}
+
+pub fn time_circuit_kzg(circuit: ModelCircuit<Fr>, model:String) {
+
+  let mut stat_collector = LoggingInfo{
+    model_name:String::from(""),
+    num_constraints:String::from(""),
+    params_construction:String::from(""),
+    generating_vkey:String::from(""), 
+    vkey_size:String::from(""), 
+    generating_pkey:String::from(""),
+    pkey_size:String::from(""), 
+    filling_circuit:String::from(""), 
+    proving_time:String::from(""), 
+    proof_size:String::from(""), 
+    verifying_time:String::from(""), 
+};
+  stat_collector.model_name = model;
+  stat_collector.num_constraints = format!("{}",circuit.k as u32);
+
   let rng = rand::thread_rng();
   let start = Instant::now();
 
@@ -79,6 +115,8 @@ pub fn time_circuit_kzg(circuit: ModelCircuit<Fr>) {
   let params = get_kzg_params("./params_kzg", degree);
 
   let circuit_duration = start.elapsed();
+  stat_collector.params_construction = format!("{}",circuit_duration.as_millis());
+
   println!(
     "Time elapsed in params construction: {:?}",
     circuit_duration
@@ -88,17 +126,23 @@ pub fn time_circuit_kzg(circuit: ModelCircuit<Fr>) {
   let vk = keygen_vk(&params, &vk_circuit).unwrap();
   drop(vk_circuit);
   let vk_duration = start.elapsed();
+  stat_collector.generating_vkey = format!("{}",vk_duration.as_millis());
+
   println!(
     "Time elapsed in generating vkey: {:?}",
     vk_duration - circuit_duration
   );
 
   let vkey_size = serialize(&vk.to_bytes(SerdeFormat::RawBytes), "vkey");
+  stat_collector.vkey_size = format!("{}",vkey_size);
+
   println!("vkey size: {} bytes", vkey_size);
 
   let pk_circuit = circuit.clone();
   let pk = keygen_pk(&params, vk, &pk_circuit).unwrap();
   let pk_duration = start.elapsed();
+  stat_collector.generating_pkey = format!("{}",pk_duration.as_millis());
+
   println!(
     "Time elapsed in generating pkey: {:?}",
     pk_duration - vk_duration
@@ -107,14 +151,20 @@ pub fn time_circuit_kzg(circuit: ModelCircuit<Fr>) {
 
   let pkey_size = serialize(&pk.to_bytes(SerdeFormat::RawBytes), "pkey");
   println!("pkey size: {} bytes", pkey_size);
+  stat_collector.pkey_size = format!("{}",vkey_size);
 
   let fill_duration = start.elapsed();
+
   let proof_circuit = circuit.clone();
   let _prover = MockProver::run(degree, &proof_circuit, vec![vec![]]).unwrap();
   let public_vals = get_public_values();
+
+  let filling: std::time::Duration = fill_duration - pk_duration;
+  stat_collector.filling_circuit = format!("{}",filling.as_millis());
+
   println!(
     "Time elapsed in filling circuit: {:?}",
-    fill_duration - pk_duration
+    filling
   );
 
   // Convert public vals to serializable format
@@ -145,11 +195,15 @@ pub fn time_circuit_kzg(circuit: ModelCircuit<Fr>) {
   .unwrap();
   let proof = transcript.finalize();
   let proof_duration = start.elapsed();
-  println!("Proving time: {:?}", proof_duration - fill_duration);
+
+  let prooftime: std::time::Duration = proof_duration - fill_duration;
+  stat_collector.proving_time = format!("{}",prooftime.as_millis());
+  println!("Proving time: {:?}", prooftime);
 
   let proof_size = serialize(&proof, "proof");
   let proof = std::fs::read("proof").unwrap();
 
+  stat_collector.proof_size = format!("{}",proof_size);
   println!("Proof size: {} bytes", proof_size);
 
   let strategy = SingleStrategy::new(&params);
@@ -164,7 +218,13 @@ pub fn time_circuit_kzg(circuit: ModelCircuit<Fr>) {
     transcript_read,
   );
   let verify_duration = start.elapsed();
-  println!("Verifying time: {:?}", verify_duration - proof_duration);
+
+  let veriftime: std::time::Duration = verify_duration - proof_duration;
+  stat_collector.verifying_time = format!("{}",veriftime.as_millis());
+
+  println!("Verifying time: {:?}", veriftime);
+
+  let _ = log_stats(stat_collector);
 }
 
 // Standalone verification
@@ -203,4 +263,31 @@ pub fn verify_circuit_kzg(
   let verify_duration = start.elapsed();
   println!("Verifying time: {:?}", verify_duration - verify_start);
   println!("Proof verified!")
+}
+
+fn log_stats(stat_collector:LoggingInfo)-> Result<(), Box<dyn Error>>
+{ 
+    let filename = "time_breakdown.csv";
+    let already_exists= Path::new(filename).exists();
+
+    let file = std::fs::OpenOptions::new()
+    .write(true)
+    .create(true)
+    .append(true)
+    .open(filename)
+    .unwrap();
+
+    let mut wtr = csv::Writer::from_writer(file);
+    
+    if already_exists == false
+    {
+        wtr.write_record(&["model,num_constraints","params_construction", "gen_vkey", "vkey_size",
+        "gen_pkey", "pkey_size", "filling_circuit", "proving_time", "proof_size","verif_time"])?;    
+    }
+
+    wtr.write_record(&[stat_collector.model_name, stat_collector.num_constraints, stat_collector.params_construction, stat_collector.generating_vkey,
+       stat_collector.vkey_size,stat_collector.generating_pkey,stat_collector.pkey_size,stat_collector.filling_circuit,
+       stat_collector.proving_time,stat_collector.proof_size,stat_collector.verifying_time])?;
+    wtr.flush()?;
+    Ok(())    
 }

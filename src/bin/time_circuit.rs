@@ -9,6 +9,7 @@ fn main() {
   let config_fname= "examples/mnist/model.msgpack";
   let inp_fname ="examples/mnist/inp.msgpack";
   let kzg_or_ipa = "kzg";
+  let model = String::from("mnist");
 
   /* 
 
@@ -24,7 +25,7 @@ if kzg_or_ipa != "kzg" && kzg_or_ipa != "ipa" {
 
   if kzg_or_ipa == "kzg" {
     let circuit = ModelCircuit::<Fr>::generate_from_file(&config_fname, &inp_fname);
-    time_circuit_kzg(circuit);
+    time_circuit_kzg(circuit,model);
   } else {
     let circuit = ModelCircuit::<Fp>::generate_from_file(&config_fname, &inp_fname);
     time_circuit_ipa(circuit);
