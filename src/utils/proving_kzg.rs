@@ -283,8 +283,8 @@ fn log_stats(stat_collector:LoggingInfo)-> Result<(), Box<dyn Error>>
     
     if already_exists == false
     {
-        wtr.write_record(&["model,num_constraints","params_construction", "gen_vkey", "vkey_size",
-        "gen_pkey", "pkey_size", "filling_circuit", "proving_time", "proof_size","verif_time"])?;    
+        wtr.write_record(&["model,num_constraints","params_construction(ms)", "gen_vkey(ms)", "vkey_size(bytes)",
+        "gen_pkey(ms)", "pkey_size(bytes)", "filling_circuit(ms)", "proving_time(ms)", "proof_size(bytes)","verif_time(ms)"])?;    
     }
 
     wtr.write_record(&[stat_collector.model_name, stat_collector.num_constraints, stat_collector.params_construction, stat_collector.generating_vkey,
