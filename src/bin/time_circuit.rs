@@ -23,10 +23,10 @@ fn main() {
     config_fname= "examples/nlp/clip/model.msgpack";
     inp_fname ="examples/nlp/clip/inp.msgpack";
     kzg_or_ipa = "kzg"; 
-  }
+  }//
   else if model == "resnet" {
-    config_fname= "examples/resnet/converted_model.msgpack";
-    inp_fname ="examples/resnet/example_inp.msgpack";
+    config_fname= "resnet/converted_model.msgpack";
+    inp_fname ="resnet/example_inp.msgpack";
     kzg_or_ipa = "kzg"; 
   }
 
