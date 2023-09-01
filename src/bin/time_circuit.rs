@@ -35,8 +35,8 @@ fn main() {
     kzg_or_ipa = "kzg"; 
   }
   else if model == "custom" {
-    config_fname= "pw_examples/custom/converted_model.msgpack";
-    inp_fname ="pw_examples/custom/example_inp.msgpack";
+    config_fname= "pw_examples/custom/model.msgpack";
+    inp_fname ="pw_examples/custom/inp.msgpack";
     kzg_or_ipa = "kzg"; 
   }
   /* 

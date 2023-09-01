@@ -29,3 +29,4 @@ testing/data
 *.diff
 pw_examples/tflite_models
 transfer.sh
+buildmodels/
