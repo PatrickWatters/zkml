@@ -18,8 +18,8 @@ fn main() {
   //let config_fname = "pw_examples/resnet/converted_model.msgpack";
   //let inp_fname = "pw_examples/resnet/example_inp.msgpack";
 
-  let config_fname = "pw_examples/squeezenet/converted_model.msgpack";
-  let inp_fname = "pw_examples/squeezenet/example_inp.msgpack";
+  let config_fname = "pw_examples/custom/converted_model.msgpack";
+  let inp_fname = "pw_examples/custom/example_inp.msgpack";
 
   let config: ModelMsgpack = load_model_msgpack(&config_fname, &inp_fname);
 

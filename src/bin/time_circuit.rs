@@ -6,7 +6,7 @@ use zkml::{
 
 fn main() {
 
-  let model = String::from("resnet");
+  let model = String::from("custom");
   let mut config_fname= "";
   let mut inp_fname ="";
   let mut kzg_or_ipa = "";
@@ -25,11 +25,20 @@ fn main() {
     kzg_or_ipa = "kzg"; 
   }//
   else if model == "resnet" {
+    config_fname= "pw_examples/resnet/converted_model.msgpack";
+    inp_fname ="pw_examples/resnet/example_inp.msgpack";
+    kzg_or_ipa = "kzg"; 
+  }
+  else if model == "squeezenet" {
     config_fname= "pw_examples/squeezenet/converted_model.msgpack";
     inp_fname ="pw_examples/squeezenet/example_inp.msgpack";
     kzg_or_ipa = "kzg"; 
   }
-
+  else if model == "custom" {
+    config_fname= "pw_examples/custom/converted_model.msgpack";
+    inp_fname ="pw_examples/custom/example_inp.msgpack";
+    kzg_or_ipa = "kzg"; 
+  }
   /* 
 
   let config_fname = std::env::args().nth(1).expect("config file path");

@@ -117,7 +117,7 @@ pub fn time_circuit_kzg(circuit: ModelCircuit<Fr>, model:String) {
   let params = get_kzg_params("./params_kzg", degree);
 
   let circuit_duration = start.elapsed();
-  stat_collector.params_construction = format!("{}",circuit_duration.as_millis());
+  stat_collector.params_construction = format!("{}",circuit_duration.as_secs());
 
   println!(
     "Time elapsed in params construction: {:?}",
@@ -128,7 +128,7 @@ pub fn time_circuit_kzg(circuit: ModelCircuit<Fr>, model:String) {
   let vk = keygen_vk(&params, &vk_circuit).unwrap();
   drop(vk_circuit);
   let vk_duration = start.elapsed();
-  stat_collector.generating_vkey = format!("{}",vk_duration.as_millis());
+  stat_collector.generating_vkey = format!("{}",vk_duration.as_secs());
 
   println!(
     "Time elapsed in generating vkey: {:?}",
@@ -143,7 +143,7 @@ pub fn time_circuit_kzg(circuit: ModelCircuit<Fr>, model:String) {
   let pk_circuit = circuit.clone();
   let pk = keygen_pk(&params, vk, &pk_circuit).unwrap();
   let pk_duration = start.elapsed();
-  stat_collector.generating_pkey = format!("{}",pk_duration.as_millis());
+  stat_collector.generating_pkey = format!("{}",pk_duration.as_secs());
 
   println!(
     "Time elapsed in generating pkey: {:?}",
@@ -162,7 +162,7 @@ pub fn time_circuit_kzg(circuit: ModelCircuit<Fr>, model:String) {
   let public_vals = get_public_values();
 
   let filling: std::time::Duration = fill_duration - pk_duration;
-  stat_collector.filling_circuit = format!("{}",filling.as_millis());
+  stat_collector.filling_circuit = format!("{}",filling.as_secs());
 
   println!(
     "Time elapsed in filling circuit: {:?}",
@@ -199,7 +199,7 @@ pub fn time_circuit_kzg(circuit: ModelCircuit<Fr>, model:String) {
   let proof_duration = start.elapsed();
 
   let prooftime: std::time::Duration = proof_duration - fill_duration;
-  stat_collector.proving_time = format!("{}",prooftime.as_millis());
+  stat_collector.proving_time = format!("{}",prooftime.as_secs());
   println!("Proving time: {:?}", prooftime);
 
   let proof_size = serialize(&proof, "proof");
@@ -222,7 +222,7 @@ pub fn time_circuit_kzg(circuit: ModelCircuit<Fr>, model:String) {
   let verify_duration = start.elapsed();
 
   let veriftime: std::time::Duration = verify_duration - proof_duration;
-  stat_collector.verifying_time = format!("{}",veriftime.as_millis());
+  stat_collector.verifying_time = format!("{}",veriftime.as_secs());
 
   println!("Verifying time: {:?}", veriftime);
 
