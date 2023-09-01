@@ -6,7 +6,7 @@ use zkml::{
 
 fn main() {
 
-  let model = String::from("custom");
+  let model = String::from("resnet");
   let mut config_fname= "";
   let mut inp_fname ="";
   let mut kzg_or_ipa = "";
@@ -25,8 +25,8 @@ fn main() {
     kzg_or_ipa = "kzg"; 
   }//
   else if model == "resnet" {
-    config_fname= "pw_examples/resnet/converted_model.msgpack";
-    inp_fname ="pw_examples/resnet/example_inp.msgpack";
+    config_fname= "pw_examples/resnet/model.msgpack";
+    inp_fname ="pw_examples/resnet/inp.msgpack";
     kzg_or_ipa = "kzg"; 
   }
   else if model == "squeezenet" {
