@@ -6,7 +6,7 @@ use zkml::{
 
 fn main() {
 
-  let model = String::from("resnet");
+  let model = String::from("mnist");
   let mut config_fname= "";
   let mut inp_fname ="";
   let mut kzg_or_ipa = "";

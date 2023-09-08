@@ -79,6 +79,7 @@ pub fn verify_kzg(
 struct LoggingInfo {
   model_name: String,
   num_constraints: String,
+  total_time: String,
   params_construction: String,
   generating_vkey: String,
   vkey_size: String,
@@ -91,10 +92,12 @@ struct LoggingInfo {
 }
 
 pub fn time_circuit_kzg(circuit: ModelCircuit<Fr>, model:String) {
+  let dur = Instant::now();
 
   let mut stat_collector = LoggingInfo{
     model_name:String::from(""),
     num_constraints:String::from(""),
+    total_time:String::from(""),
     params_construction:String::from(""),
     generating_vkey:String::from(""), 
     vkey_size:String::from(""), 
@@ -225,6 +228,7 @@ pub fn time_circuit_kzg(circuit: ModelCircuit<Fr>, model:String) {
   stat_collector.verifying_time = format!("{}",veriftime.as_millis());
 
   println!("Verifying time: {:?}", veriftime);
+  stat_collector.total_time = format!("{}",dur.elapsed().as_millis());
 
   let _ = log_stats(stat_collector);
 }
@@ -269,7 +273,7 @@ pub fn verify_circuit_kzg(
 
 fn log_stats(stat_collector:LoggingInfo)-> Result<(), Box<dyn Error>>
 { 
-    let filename = "../halo2/stats/zkml_stats.csv";
+    let filename = "/home/project2reu/patrick/gpuhalo2/halo2/stats/zkml_stats.csv";
     let already_exists= Path::new(filename).exists();
 
     let file = std::fs::OpenOptions::new()
@@ -283,11 +287,11 @@ fn log_stats(stat_collector:LoggingInfo)-> Result<(), Box<dyn Error>>
     
     if already_exists == false
     {
-        wtr.write_record(&["model","num_constraints","params_construction(ms)", "gen_vkey(ms)", "vkey_size(bytes)",
+        wtr.write_record(&["model","num_constraints","total_time","params_construction(ms)", "gen_vkey(ms)", "vkey_size(bytes)",
         "gen_pkey(ms)", "pkey_size(bytes)", "filling_circuit(ms)", "proving_time(ms)", "proof_size(bytes)","verif_time(ms)"])?;    
     }
 
-    wtr.write_record(&[stat_collector.model_name, stat_collector.num_constraints, stat_collector.params_construction, stat_collector.generating_vkey,
+    wtr.write_record(&[stat_collector.model_name, stat_collector.num_constraints, stat_collector.total_time, stat_collector.params_construction, stat_collector.generating_vkey,
        stat_collector.vkey_size,stat_collector.generating_pkey,stat_collector.pkey_size,stat_collector.filling_circuit,
        stat_collector.proving_time,stat_collector.proof_size,stat_collector.verifying_time])?;
     wtr.flush()?;
