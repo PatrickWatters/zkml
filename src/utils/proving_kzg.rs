@@ -30,7 +30,9 @@ use crate::{model::ModelCircuit, utils::helpers::get_public_values};
 
 pub fn get_kzg_params(params_dir: &str, degree: u32) -> ParamsKZG<Bn256> {
   let rng = rand::thread_rng();
-  let path = format!("{}/{}.params", params_dir, degree);
+  let path = format!("{}\\{}.params", params_dir, degree);
+  //let path = format!("{}\\{}.params", params_dir, degree);
+
   let params_path = Path::new(&path);
   if File::open(&params_path).is_err() {
     let params = ParamsKZG::<Bn256>::setup(degree, rng);
@@ -78,6 +80,7 @@ pub fn verify_kzg(
 
 struct LoggingInfo {
   model_name: String,
+  device: String,
   num_constraints: String,
   total_time: String,
   params_construction: String,
@@ -91,11 +94,12 @@ struct LoggingInfo {
   verifying_time: String,
 }
 
-pub fn time_circuit_kzg(circuit: ModelCircuit<Fr>, model:String) {
+pub fn time_circuit_kzg(circuit: ModelCircuit<Fr>, model:String, device:String) {
   let dur = Instant::now();
 
   let mut stat_collector = LoggingInfo{
     model_name:String::from(""),
+    device:String::from(device),
     num_constraints:String::from(""),
     total_time:String::from(""),
     params_construction:String::from(""),
@@ -117,7 +121,9 @@ pub fn time_circuit_kzg(circuit: ModelCircuit<Fr>, model:String) {
   let start = Instant::now();
 
   let degree = circuit.k as u32;
-  let params = get_kzg_params("./params_kzg", degree);
+  //let params = get_kzg_params(".\\params_kzg", degree);
+
+  let params = get_kzg_params("C:\\Users\\pw\\projects\\dist-zkml\\zkml\\src\\params_kzg", degree);
 
   let circuit_duration = start.elapsed();
   stat_collector.params_construction = format!("{}",circuit_duration.as_millis());
@@ -230,7 +236,8 @@ pub fn time_circuit_kzg(circuit: ModelCircuit<Fr>, model:String) {
   println!("Verifying time: {:?}", veriftime);
   stat_collector.total_time = format!("{}",dur.elapsed().as_millis());
 
-  let _ = log_stats(stat_collector);
+
+  log_stats(stat_collector);
 }
 
 // Standalone verification
@@ -241,7 +248,7 @@ pub fn verify_circuit_kzg(
   public_vals_fname: &str,
 ) {
   let degree = circuit.k as u32;
-  let params = get_kzg_params("./params_kzg", degree);
+  let params = get_kzg_params(".\\params_kzg", degree);
   println!("Loaded the parameters");
 
   let vk = VerifyingKey::read::<BufReader<File>, ModelCircuit<Fr>>(
@@ -271,29 +278,32 @@ pub fn verify_circuit_kzg(
   println!("Proof verified!")
 }
 
-fn log_stats(stat_collector:LoggingInfo)-> Result<(), Box<dyn Error>>
+fn log_stats(stat_collector:LoggingInfo)
 { 
-    let filename = "/home/project2reu/patrick/gpuhalo2/halo2/stats/zkml_stats.csv";
-    let already_exists= Path::new(filename).exists();
+   let log_path = "C:\\Users\\pw\\projects\\dist-zkml\\halo2\\logs";
+   let log_name = "zkml_stats.csv";
+   let log_file = format!("{}\\{}", log_path, log_name);
+
+   let already_exists= Path::new(&log_file).exists();
+
 
     let file = std::fs::OpenOptions::new()
     .write(true)
     .create(true)
     .append(true)
-    .open(filename)
+    .open(log_file)
     .unwrap();
 
     let mut wtr = csv::Writer::from_writer(file);
     
     if already_exists == false
     {
-        wtr.write_record(&["model","num_constraints","total_time","params_construction(ms)", "gen_vkey(ms)", "vkey_size(bytes)",
-        "gen_pkey(ms)", "pkey_size(bytes)", "filling_circuit(ms)", "proving_time(ms)", "proof_size(bytes)","verif_time(ms)"])?;    
+      let _ =wtr.write_record(&["model","device", "num_constraints","total_time(ms)","params_construction(ms)", "gen_vkey(ms)", "vkey_size(bytes)",
+        "gen_pkey(ms)", "pkey_size(bytes)", "filling_circuit(ms)", "proving_time(ms)", "proof_size(bytes)","verif_time(ms)"]);    
     }
 
-    wtr.write_record(&[stat_collector.model_name, stat_collector.num_constraints, stat_collector.total_time, stat_collector.params_construction, stat_collector.generating_vkey,
+    let _ = wtr.write_record(&[stat_collector.model_name, stat_collector.device, stat_collector.num_constraints, stat_collector.total_time, stat_collector.params_construction, stat_collector.generating_vkey,
        stat_collector.vkey_size,stat_collector.generating_pkey,stat_collector.pkey_size,stat_collector.filling_circuit,
-       stat_collector.proving_time,stat_collector.proof_size,stat_collector.verifying_time])?;
-    wtr.flush()?;
-    Ok(())    
+       stat_collector.proving_time,stat_collector.proof_size,stat_collector.verifying_time]);
+       let _ = wtr.flush();
 }
