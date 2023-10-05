@@ -30,3 +30,4 @@ testing/data
 pw_examples/tflite_models
 transfer.sh
 buildmodels/
+exp_results/

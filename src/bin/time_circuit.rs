@@ -10,7 +10,7 @@ fn main() {
   let inp_fname = std::env::args().nth(2).expect("input file path");
   let kzg_or_ipa = std::env::args().nth(3).expect("kzg or ipa");*/
 
-  let model = String::from("mnist");
+  let model = String::from("custom");
   let mut config_fname= "";
   let mut inp_fname ="";
   let mut kzg_or_ipa = "";
@@ -20,8 +20,8 @@ fn main() {
   {
     //config_fname = "pw_examples/mnist/model.msgpack";
     //inp_fname = "pw_examples/mnist/example_inp.msgpack"
-    config_fname= "examples\\mnist\\model.msgpack";
-    inp_fname ="examples\\mnist\\inp.msgpack";
+    config_fname= "examples/mnist/model.msgpack";
+    inp_fname ="examples/mnist/inp.msgpack";
     kzg_or_ipa = "kzg";
   } 
   else if model == "clip" {

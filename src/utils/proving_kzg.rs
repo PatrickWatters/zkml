@@ -30,7 +30,8 @@ use crate::{model::ModelCircuit, utils::helpers::get_public_values};
 
 pub fn get_kzg_params(params_dir: &str, degree: u32) -> ParamsKZG<Bn256> {
   let rng = rand::thread_rng();
-  let path = format!("{}\\{}.params", params_dir, degree);
+  let path = format!("{}/{}.params", params_dir, degree);
+
   //let path = format!("{}\\{}.params", params_dir, degree);
 
   let params_path = Path::new(&path);
@@ -121,9 +122,10 @@ pub fn time_circuit_kzg(circuit: ModelCircuit<Fr>, model:String, device:String) 
   let start = Instant::now();
 
   let degree = circuit.k as u32;
-  //let params = get_kzg_params(".\\params_kzg", degree);
 
-  let params = get_kzg_params("C:\\Users\\pw\\projects\\dist-zkml\\zkml\\src\\params_kzg", degree);
+  let params = get_kzg_params("src/params_kzg", degree);
+
+  //let params = get_kzg_params("C:\\Users\\pw\\projects\\dist-zkml\\zkml\\src\\params_kzg", degree);
 
   let circuit_duration = start.elapsed();
   stat_collector.params_construction = format!("{}",circuit_duration.as_millis());
@@ -248,7 +250,7 @@ pub fn verify_circuit_kzg(
   public_vals_fname: &str,
 ) {
   let degree = circuit.k as u32;
-  let params = get_kzg_params(".\\params_kzg", degree);
+  let params = get_kzg_params("./params_kzg", degree);
   println!("Loaded the parameters");
 
   let vk = VerifyingKey::read::<BufReader<File>, ModelCircuit<Fr>>(
@@ -280,9 +282,9 @@ pub fn verify_circuit_kzg(
 
 fn log_stats(stat_collector:LoggingInfo)
 { 
-   let log_path = "C:\\Users\\pw\\projects\\dist-zkml\\halo2\\logs";
+   let log_path = "exp_results";
    let log_name = "zkml_stats.csv";
-   let log_file = format!("{}\\{}", log_path, log_name);
+   let log_file = format!("{}/{}", log_path, log_name);
 
    let already_exists= Path::new(&log_file).exists();
 
