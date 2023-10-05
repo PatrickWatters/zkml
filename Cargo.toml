@@ -29,7 +29,7 @@ bitvec = "1.0.1"
 halo2 = {path = "../halo2/halo2", package="halo2"}
 #halo2 = { path="/Users/patrickwatters/Projects/halogpu/halo2"}
 halo2_gadgets = { path = "../halo2/halo2_gadgets", package="halo2_gadgets",features = ["circuit-params"] }
-halo2_proofs = { path = "../halo2/halo2_proofs", package="halo2_proofs", default-features = false, features = ["circuit-params","logging"]}
+halo2_proofs = { path = "../halo2/halo2_proofs", package="halo2_proofs", features = ["circuit-params"]}
 
 lazy_static = "1.4.0"
 ndarray = "0.15.6"
