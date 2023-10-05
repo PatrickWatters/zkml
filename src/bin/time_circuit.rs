@@ -10,7 +10,7 @@ fn main() {
   let inp_fname = std::env::args().nth(2).expect("input file path");
   let kzg_or_ipa = std::env::args().nth(3).expect("kzg or ipa");*/
 
-  let model = String::from("custom");
+  let model = String::from("mnist");
   let mut config_fname= "";
   let mut inp_fname ="";
   let mut kzg_or_ipa = "";
